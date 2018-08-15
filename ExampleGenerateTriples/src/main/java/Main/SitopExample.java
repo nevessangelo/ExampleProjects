@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.jena.ontology.Individual;
@@ -16,6 +17,8 @@ import org.apache.jena.ontology.OntClass;
 import org.apache.jena.ontology.OntDocumentManager;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
+import org.apache.jena.ontology.OntProperty;
+import org.apache.jena.ontology.Restriction;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.util.FileManager;
 import org.json.simple.JSONObject;
@@ -67,8 +70,17 @@ public class SitopExample {
             individuals.createResource(reportURIID, sitop_class);
             individuals.createResource(authorURIID, author_class);
             
+ 
             System.out.println("---------individuals------------");
             individuals.write(System.out, "N-Triples");
+            
+            //get propretys
+            OntProperty hasAuthor = m.createOntProperty(SitopNS + "hasAuthor");
+            System.out.println(hasAuthor.getDomain());
+            System.out.println(hasAuthor.getRange());
+
+            
+
 
         } catch (FileNotFoundException ex) {
             Logger.getLogger(SitopExample.class.getName()).log(Level.SEVERE, null, ex);
