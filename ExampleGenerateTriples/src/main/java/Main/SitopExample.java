@@ -91,7 +91,7 @@ public class SitopExample {
             inf.write(out, "RDF/XML");
             inf.close();
             
-  
+            
             
 
 
