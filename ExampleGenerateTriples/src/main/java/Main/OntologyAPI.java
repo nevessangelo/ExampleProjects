@@ -33,40 +33,44 @@ public class OntologyAPI {
         OntModel base = ModelFactory.createOntologyModel(s, null);
         InputStream in = FileManager.get().open(path);
         base.read(in, "RDF/XML");
-        base.write(System.out);
+        //base.write(System.out);
         
         OntModel inf = ModelFactory.createOntologyModel(OWL_MEM_MICRO_RULE_INF, base);
 
         String SOURCE = "http://www.eswc2006.org/technologies/ontology";
         String NS = SOURCE + "#";
         
+        OntClass paper = base.getOntClass( NS + "Paper" );
+        Individual p1 = base.createIndividual(NS + "paper1", paper);
         
-        //listsubclasses
+        p1 = inf.getIndividual(NS + "paper1");
         
-        OntClass artefact = base.getOntClass(NS + "Artefact");
-        for (Iterator<OntClass> i = artefact.listSubClasses(); i.hasNext(); ) {
-            try{
-                OntClass c = i.next();
-                System.out.println( c.getURI() );
-            }catch(Exception e ){
-                continue;
-            }
-            
-        }
+        //inf.write(System.out);
         
-//        OntClass paper = base.getOntClass(NS + "Paper");
-//        System.out.println(paper);
-//        
-//        Individual p1 = base.createIndividual(NS + "paper1", paper);
-//        
-//        p1 = inf.getIndividual( NS + "paper1" );
+        
+        OntClass ontClass = base.getOntClass(NS+"Artefact");
+        Individual p2 = base.createIndividual("Http://myselet/"+"artefact1", ontClass);
+        //<Http://myselet/artefact1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.eswc2006.org/technologies/ontology#Artefact> .
+        //base.write(System.out, "N-Triples");
+        
+        //create indivuduals
+        OntModel individuals = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
+        individuals.createResource(p2);
+        individuals.createResource(p2);
+        individuals.createResource(NS+"artefact2", ontClass);
+        individuals.createResource(NS+"artefact2", ontClass);
+        System.out.println("---------individual------------");
+        individuals.write(System.out, "N-Triples");
 
 
-    
 
+
+       
 
 
         
+
+
 
 
 
