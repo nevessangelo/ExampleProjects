@@ -56,7 +56,7 @@ public class OntologyAPI {
         //create indivuduals
         OntModel individuals = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
         individuals.createResource(p2);
-        individuals.createResource(p2);
+        individuals.createResource(p2); //blanck node
         individuals.createResource(NS+"artefact2", ontClass);
         individuals.createResource(NS+"artefact2", ontClass);
         System.out.println("---------individual------------");
