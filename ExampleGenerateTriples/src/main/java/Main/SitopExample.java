@@ -6,24 +6,29 @@
 package Main;
 
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.jena.datatypes.xsd.XSDDatatype;
+import org.apache.jena.ontology.DatatypeProperty;
 import org.apache.jena.ontology.Individual;
 import org.apache.jena.ontology.OntClass;
 import org.apache.jena.ontology.OntDocumentManager;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.ontology.OntProperty;
-import org.apache.jena.ontology.Restriction;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.util.FileManager;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.apache.jena.graph.Node;
+import org.apache.jena.graph.NodeFactory;
+
 
 /**
  *
@@ -66,19 +71,27 @@ public class SitopExample {
             System.out.println(author_class);
             
             //create individuals
-            OntModel individuals = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
-            individuals.createResource(reportURIID, sitop_class);
-            individuals.createResource(authorURIID, author_class);
-            
- 
             System.out.println("---------individuals------------");
-            individuals.write(System.out, "N-Triples");
+            OntModel inf = ModelFactory.createOntologyModel(s, null);
+            Individual reportIndividual = inf.createIndividual(reportURIID, sitop_class);
+            Individual authorIndividual = inf.createIndividual(authorURIID, author_class);
             
             //get propretys
-            OntProperty hasAuthor = m.createOntProperty(SitopNS + "hasAuthor");
-            System.out.println(hasAuthor.getDomain());
-            System.out.println(hasAuthor.getRange());
-
+            OntProperty hasAuthor = m.getObjectProperty(SitopNS + "hasAuthor");
+            DatatypeProperty hasCode = m.getDatatypeProperty(SitopNS + "hasCode");
+            
+            reportIndividual.addProperty(hasAuthor, authorIndividual);
+            Node codeNode = NodeFactory.createLiteralByValue(USUA_CD_USERNAME, XSDDatatype.XSDstring);
+            RDFNode RDFcodeNode = inf.asRDFNode(codeNode);
+            authorIndividual.addProperty(hasCode, RDFcodeNode);
+            inf.write(System.out, "N-Triples");
+            
+            //export to .rdf
+            FileOutputStream out = new FileOutputStream("/home/angelo/Test.rdf",false);
+            inf.write(out, "RDF/XML");
+            inf.close();
+            
+  
             
 
 
